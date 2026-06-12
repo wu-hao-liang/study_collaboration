@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" role="img" aria-label="直播背景占位图">
+  <rect width="1080" height="1920" fill="#1f6f78"/>
+  <path d="M0 1320h1080v600H0z" fill="#f4f7f5"/>
+  <circle cx="835" cy="270" r="170" fill="#f7c948"/>
+  <rect x="250" y="560" width="580" height="850" rx="48" fill="#e7edf0"/>
+  <rect x="300" y="615" width="480" height="320" rx="32" fill="#ffffff"/>
+  <rect x="300" y="980" width="480" height="360" rx="32" fill="#d9e3e8"/>
+  <rect x="766" y="680" width="28" height="180" rx="14" fill="#94a3ad"/>
+  <rect x="766" y="1050" width="28" height="180" rx="14" fill="#94a3ad"/>
+</svg>

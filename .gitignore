@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Live background runtime and frontend artifacts
+runtime/
+frontend/dist/
+frontend/coverage/
+frontend/test-results/
+frontend/playwright-report/
+frontend/node_modules/
+*.tsbuildinfo
+data/mediapipe/

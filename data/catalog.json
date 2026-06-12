@@ -1,0 +1,80 @@
+[
+  {
+    "id": "fridge-haier-500",
+    "category": "十字对开门",
+    "name": "海尔 500L 十字对开门冰箱",
+    "model": "BCD-500W",
+    "image": "/assets/products/fridge-haier-500.svg",
+    "specs": [
+      {"label": "总容积", "value": "500 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "制冷方式", "value": "风冷"},
+      {"label": "特色功能", "value": "双循环净味"}
+    ]
+  },
+  {
+    "id": "fridge-midea-508",
+    "category": "十字对开门",
+    "name": "美的 508L 双系统冰箱",
+    "model": "BCD-508WTPZM",
+    "image": "/assets/products/fridge-midea-508.svg",
+    "specs": [
+      {"label": "总容积", "value": "508 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "制冷方式", "value": "风冷"},
+      {"label": "特色功能", "value": "双系统循环"}
+    ]
+  },
+  {
+    "id": "fridge-hisense-525",
+    "category": "对开门",
+    "name": "海信 525L 对开门冰箱",
+    "model": "BCD-525WFK1DPQ",
+    "image": "/assets/products/fridge-hisense-525.svg",
+    "specs": [
+      {"label": "总容积", "value": "525 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "制冷方式", "value": "风冷"},
+      {"label": "噪音", "value": "36 dB"}
+    ]
+  },
+  {
+    "id": "fridge-ronshen-452",
+    "category": "法式多门",
+    "name": "容声 452L 法式多门冰箱",
+    "model": "BCD-452WD16MPA",
+    "image": "/assets/products/fridge-ronshen-452.svg",
+    "specs": [
+      {"label": "总容积", "value": "452 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "冷冻能力", "value": "7 kg/12h"},
+      {"label": "特色功能", "value": "母婴变温空间"}
+    ]
+  },
+  {
+    "id": "fridge-casarte-505",
+    "category": "法式多门",
+    "name": "卡萨帝 505L 原石冰箱",
+    "model": "BCD-505WGCFDM4WKU1",
+    "image": "/assets/products/fridge-casarte-505.svg",
+    "specs": [
+      {"label": "总容积", "value": "505 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "制冷方式", "value": "风冷"},
+      {"label": "特色功能", "value": "MSA 控氧保鲜"}
+    ]
+  },
+  {
+    "id": "fridge-tcl-256",
+    "category": "三门",
+    "name": "TCL 256L 三门冰箱",
+    "model": "BCD-256WPJD",
+    "image": "/assets/products/fridge-tcl-256.svg",
+    "specs": [
+      {"label": "总容积", "value": "256 L"},
+      {"label": "能效等级", "value": "一级"},
+      {"label": "制冷方式", "value": "风冷"},
+      {"label": "变温区", "value": "-20 至 5°C"}
+    ]
+  }
+]
