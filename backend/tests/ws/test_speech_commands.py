@@ -46,7 +46,7 @@ def _receive_type(
 
 
 def test_speech_auto_commit_uses_latest_edited_price(tmp_path: Path) -> None:
-    client = _client(tmp_path, review_ms=30)
+    client = _client(tmp_path, review_ms=150)
 
     with client.websocket_connect("/ws/studio") as studio:
         studio.receive_json()

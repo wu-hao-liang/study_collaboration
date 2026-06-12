@@ -1,9 +1,12 @@
 import logging
 from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from backend.app.api.bootstrap import router as bootstrap_router
 from backend.app.api.errors import ApiError, api_error_handler
@@ -72,6 +75,24 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 "session_revision": session_service.state.revision,
             },
         }
+
+    frontend_dist = Path("frontend/dist").resolve()
+    if frontend_dist.is_dir():
+        assets_dir = frontend_dist / "assets"
+        if assets_dir.is_dir():
+            app.mount("/assets", StaticFiles(directory=assets_dir), name="frontend-assets")
+
+        @app.get("/", include_in_schema=False)
+        @app.get("/studio", include_in_schema=False)
+        @app.get("/control/{token}", include_in_schema=False)
+        async def frontend_route() -> FileResponse:
+            return FileResponse(frontend_dist / "index.html")
+
+        @app.get("/{path:path}", include_in_schema=False)
+        async def frontend_fallback(path: str) -> FileResponse:
+            if path.startswith(("api/", "ws/")):
+                raise HTTPException(status_code=404)
+            return FileResponse(frontend_dist / "index.html")
 
     return app
 
