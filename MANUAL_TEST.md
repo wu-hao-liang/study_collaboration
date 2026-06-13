@@ -1,13 +1,12 @@
-# Manual Test Guide
+# 手动测试指南
 
-This checklist validates the completed application through speech control. Hand gesture
-recognition is intentionally excluded.
+本清单用于通过语音控制验证当前已完成的应用功能。手势识别功能暂不包含在本次测试范围内。
 
-## 1. Prepare And Start
+## 1. 准备并启动应用
 
-1. Connect the Windows PC and iPhone to the same trusted Wi-Fi.
-2. Open PowerShell in `C:\Users\admin\live_background`.
-3. Build and start the application:
+1. 将 Windows 电脑和 iPhone 连接到同一个可信 Wi-Fi 网络。
+2. 在 `C:\Users\admin\live_background` 目录中打开 PowerShell。
+3. 构建并启动应用：
 
 ```powershell
 uv sync
@@ -18,224 +17,224 @@ $env:APP_DEV_MODE="false"
 uv run live-background
 ```
 
-4. Keep this PowerShell window open.
-5. In desktop Chrome, open `http://127.0.0.1:8000/studio`.
+4. 保持此 PowerShell 窗口开启。
+5. 在电脑端 Chrome 中打开 `http://127.0.0.1:8000/studio`。
 
-Expected:
+预期结果：
 
-- The left side contains a fixed 9:16 live capture frame.
-- The right side contains the private desktop console.
-- The status reads `实时连接正常`.
-- Product search, device details, errors, QR codes, and tokens appear only on the right.
+- 左侧显示固定的 9:16 直播采集画面。
+- 右侧显示仅主播可见的电脑控制台。
+- 状态显示为 `实时连接正常`。
+- 商品搜索、设备详情、错误、二维码和令牌仅显示在右侧。
 
-Resolution check:
+分辨率检查：
 
-1. Change `输出分辨率` through all four presets.
-2. Confirm the live header changes to the selected dimensions.
-3. Refresh Chrome and confirm the last selection is restored.
-4. Configure Douyin Live Companion output to the same resolution before a real stream.
+1. 在 `输出分辨率` 中依次选择全部四种预设。
+2. 确认直播画面标题显示为所选尺寸。
+3. 刷新 Chrome，确认恢复上次选择的分辨率。
+4. 正式直播前，将抖音直播伴侣的输出分辨率设置为相同尺寸。
 
-## 2. Desktop Studio Smoke Test
+## 2. 电脑端直播间冒烟测试
 
-1. Resize Chrome wider and narrower.
-2. Shorten the Chrome window and confirm the live frame remains at the selected pixel size.
-3. Confirm its top-left stays anchored and the excess height extends below the viewport.
-4. Confirm only the private right panel scrolls and no private panel overlaps the output.
-5. Search for `法式`.
-6. Confirm only the two French-door products remain in the private result list.
-7. Select `容声 452L 法式多门冰箱`.
+1. 分别将 Chrome 窗口拉宽和缩窄。
+2. 缩短 Chrome 窗口高度，确认直播画面仍保持所选的像素尺寸。
+3. 确认直播画面左上角固定，超出部分延伸到视口下方。
+4. 确认只有右侧私有控制面板可以滚动，并且不会覆盖直播输出。
+5. 搜索 `法式`。
+6. 确认私有结果列表中只保留两款法式多门商品。
+7. 选择 `容声 452L 法式多门冰箱`。
 
-Expected:
+预期结果：
 
-- The live frame immediately displays the selected product.
-- Search results never appear inside the live frame.
-- The revision number increases.
+- 直播画面立即显示所选商品。
+- 搜索结果不会出现在直播画面中。
+- 修订版本号增加。
 
-## 3. Price And Product Persistence
+## 3. 价格和商品状态持久化
 
-1. Enter `4599` as the live price and select `更新价格`.
-2. Confirm the live frame displays `¥4,599.00`.
-3. Select another product and enter a different price.
-4. Return to the first product.
-5. Refresh the browser.
+1. 输入直播价格 `4599`，然后选择 `更新价格`。
+2. 确认直播画面显示 `¥4,599.00`。
+3. 选择另一款商品，并输入不同价格。
+4. 返回第一款商品。
+5. 刷新浏览器。
 
-Expected:
+预期结果：
 
-- Each product keeps its own temporary price.
-- The selected product, price, and panel survive a browser refresh.
-- Updating the current price triggers the price-highlight animation.
+- 每款商品分别保留自己的临时价格。
+- 刷新浏览器后，所选商品、价格和面板状态保持不变。
+- 更新当前价格时触发价格高亮动画。
 
-## 4. Panels And Animations
+## 4. 面板和动画
 
-1. Select `产品摘要`, then `参数详情`.
-2. Trigger `价格高亮`.
-3. Trigger `产品聚焦`.
-4. Trigger each animation several times.
+1. 选择 `产品摘要`，然后选择 `参数详情`。
+2. 触发 `价格高亮`。
+3. 触发 `产品聚焦`。
+4. 分别多次触发每种动画。
 
-Expected:
+预期结果：
 
-- Exactly one panel is visible at a time.
-- Details show the correct image and specifications without an internal scrollbar.
-- Animations replay every time and do not change the revision number.
+- 同一时间只显示一个面板。
+- 详情面板显示正确的图片和规格，且内部没有滚动条。
+- 动画每次都能重新播放，并且不会改变修订版本号。
 
-## 5. Pair The iPhone
+## 5. 配对 iPhone
 
-1. In the desktop `手机控制` section, select `生成配对二维码`.
-2. Scan the QR code with the iPhone Camera app.
-3. Open the link in Safari.
+1. 在电脑端的 `手机控制` 区域选择 `生成配对二维码`。
+2. 使用 iPhone 相机扫描二维码。
+3. 在 Safari 中打开链接。
 
-Expected:
+预期结果：
 
-- Safari shows `冰箱咨询控制台` and `已连接`.
-- The desktop live product and phone current product match.
-- The phone page does not expose `结束场次`.
-- The phone page does not visibly display the pairing token.
+- Safari 显示 `冰箱咨询控制台` 和 `已连接`。
+- 电脑端直播商品与手机端当前商品一致。
+- 手机页面不显示 `结束场次`。
+- 手机页面不会直接显示配对令牌。
 
-If Safari cannot open the page:
+如果 Safari 无法打开页面：
 
-- Confirm both devices are on the same Wi-Fi.
-- Allow Python through Windows Defender Firewall for private networks.
-- Confirm the application was started with `APP_HOST=0.0.0.0`.
-- Do not use a guest Wi-Fi network that isolates devices.
+- 确认两台设备连接到同一个 Wi-Fi。
+- 允许 Python 通过 Windows Defender 防火墙的专用网络。
+- 确认应用使用 `APP_HOST=0.0.0.0` 启动。
+- 不要使用会隔离设备的访客 Wi-Fi 网络。
 
-## 6. Phone Controls
+## 6. 手机端控制
 
-From the iPhone:
+在 iPhone 上执行以下操作：
 
-1. Search for `三门`.
-2. Select `TCL 256L 三门冰箱`.
-3. Enter price `2599`.
-4. Switch between summary and details.
-5. Trigger both animations.
-6. Toggle gesture control on and off.
-7. Switch the voice target between product search and live price.
+1. 搜索 `三门`。
+2. 选择 `TCL 256L 三门冰箱`。
+3. 输入价格 `2599`。
+4. 在产品摘要和参数详情之间切换。
+5. 触发两种动画。
+6. 打开并关闭手势控制。
+7. 在商品搜索和直播价格之间切换语音目标。
 
-Expected:
+预期结果：
 
-- Every action updates the desktop in about one second or less.
-- Price becomes `¥2,599.00`.
-- Buttons are comfortably touchable and the page has no horizontal scrolling.
-- Gesture toggle changes state, although camera gesture recognition is not implemented yet.
+- 每项操作都在约一秒内更新到电脑端。
+- 价格变为 `¥2,599.00`。
+- 按钮便于触控，页面没有横向滚动。
+- 手势开关状态会改变，但相机手势识别功能尚未实现。
 
-## 7. Single-Phone And Reconnect Test
+## 7. 单手机占用和重连测试
 
-1. Keep the first iPhone connected.
-2. Open the same QR link on a second phone or another Safari private tab.
+1. 保持第一台 iPhone 连接。
+2. 在第二台手机或另一个 Safari 无痕浏览标签页中打开同一个二维码链接。
 
-Expected:
+预期结果：
 
-- The second client displays `控制端已被占用`.
-- It cannot control the session.
+- 第二个客户端显示 `控制端已被占用`。
+- 第二个客户端无法控制当前场次。
 
-Then:
+然后执行：
 
-1. Briefly disable Wi-Fi on the original iPhone.
-2. Re-enable it within 15 seconds.
+1. 暂时关闭原 iPhone 的 Wi-Fi。
+2. 在 15 秒内重新开启 Wi-Fi。
 
-Expected:
+预期结果：
 
-- The original phone reconnects and restores the current state.
-- Desktop controls continue working while the phone is disconnected.
+- 原手机重新连接，并恢复当前状态。
+- 手机断开期间，电脑端控制仍可正常使用。
 
-## 8. Desktop Speech Initialization
+## 8. 电脑端语音初始化
 
-Use desktop Chrome for this section.
+本节使用电脑端 Chrome 进行测试。
 
-1. In `桌面语音`, select `初始化语音`.
-2. Allow microphone access when Chrome asks.
+1. 在 `桌面语音` 区域选择 `初始化语音`。
+2. Chrome 请求麦克风权限时选择允许。
 
-Expected:
+预期结果：
 
-- Status changes to `可用`.
-- The phone `按住说话` button becomes enabled.
+- 状态变为 `可用`。
+- 手机端的 `按住说话` 按钮变为可用。
 
-Fallback checks:
+降级处理检查：
 
-- If permission is denied, the desktop shows `权限被拒绝`.
-- Manual product search and price input remain usable.
-- No raw audio is saved by the application.
+- 如果拒绝权限，电脑端显示 `权限被拒绝`。
+- 手动商品搜索和价格输入仍可使用。
+- 应用不会保存原始音频。
 
-## 9. Speech Search Test
+## 9. 语音搜索测试
 
-1. On the phone, select voice target `产品搜索`.
-2. Hold `按住说话`.
-3. Say `法式多门`.
-4. Release the button.
+1. 在手机端将语音目标选择为 `产品搜索`。
+2. 按住 `按住说话`。
+3. 说出 `法式多门`。
+4. 松开按钮。
 
-Expected:
+预期结果：
 
-- The private desktop console shows the recognized draft.
-- A three-second countdown appears.
-- Before it expires, the draft can be edited, confirmed, or canceled.
-- On commit, the desktop private search becomes `法式多门`.
-- Speech text never appears in the live capture frame.
+- 电脑端私有控制台显示识别出的草稿。
+- 显示三秒倒计时。
+- 倒计时结束前，可以编辑、确认或取消草稿。
+- 提交后，电脑端私有搜索内容变为 `法式多门`。
+- 语音文本不会出现在直播采集画面中。
 
-Repeat once and select `撤销`. Confirm the search is not changed.
+再重复一次测试并选择 `撤销`，确认搜索内容没有改变。
 
-## 10. Speech Price Test
+## 10. 语音价格测试
 
-1. Ensure a product is selected.
-2. On the phone, select voice target `直播价格`.
-3. Hold the speech button, say `四千二百`, and release.
-4. Let the three-second countdown expire.
+1. 确保已经选择一款商品。
+2. 在手机端将语音目标选择为 `直播价格`。
+3. 按住语音按钮，说出 `四千二百`，然后松开。
+4. 等待三秒倒计时结束。
 
-Expected:
+预期结果：
 
-- The current product price becomes `¥4,200.00`.
-- A price-highlight animation plays.
+- 当前商品价格变为 `¥4,200.00`。
+- 播放价格高亮动画。
 
-Invalid input check:
+无效输入检查：
 
-1. Repeat and say `便宜一点`.
+1. 重复上述操作，并说出 `便宜一点`。
 
-Expected:
+预期结果：
 
-- A private error reports that the price is invalid.
-- The previous valid price remains unchanged.
+- 私有控制台显示价格无效的错误。
+- 之前的有效价格保持不变。
 
-## 11. Session End Test
+## 11. 结束场次测试
 
-1. Note the current selected product and prices.
-2. On the desktop, select `结束场次`.
-3. Select `取消`.
-4. Confirm nothing changed.
-5. Select `结束场次` again and confirm.
+1. 记录当前所选商品和价格。
+2. 在电脑端选择 `结束场次`。
+3. 选择 `取消`。
+4. 确认所有状态均未改变。
+5. 再次选择 `结束场次` 并确认。
 
-Expected:
+预期结果：
 
-- Temporary prices and speech drafts are cleared.
-- Gesture state returns to off.
-- The old phone loses control.
-- The old QR link becomes invalid.
-- A newly generated QR code can pair a phone again.
+- 临时价格和语音草稿被清除。
+- 手势状态恢复为关闭。
+- 原手机失去控制权限。
+- 原二维码链接失效。
+- 生成新二维码后，可以重新配对手机。
 
-## 12. Restart Recovery Test
+## 12. 重启恢复测试
 
-Before ending a new session:
+在结束新场次前执行：
 
-1. Select a product and set a price.
-2. Stop the PowerShell process with `Ctrl+C`.
-3. Run `uv run live-background` again with the same environment variables.
-4. Reopen the desktop studio.
+1. 选择一款商品并设置价格。
+2. 使用 `Ctrl+C` 停止 PowerShell 进程。
+3. 使用相同的环境变量再次运行 `uv run live-background`。
+4. 重新打开电脑端直播间。
 
-Expected:
+预期结果：
 
-- The unfinished session restores its selected product, price, and panel.
-- A session that was explicitly ended does not restore old temporary prices.
+- 未结束的场次会恢复所选商品、价格和面板。
+- 已明确结束的场次不会恢复旧的临时价格。
 
-## Test Record
+## 测试记录
 
-| Area | Pass/Fail | Notes |
+| 测试区域 | 通过/失败 | 备注 |
 | --- | --- | --- |
-| Desktop layout and privacy boundary |  |  |
-| Product search and selection |  |  |
-| Per-product prices and persistence |  |  |
-| Panels and animations |  |  |
-| iPhone pairing |  |  |
-| Phone controls |  |  |
-| Single-phone slot and reconnect |  |  |
-| Speech initialization and fallback |  |  |
-| Speech search |  |  |
-| Speech price and invalid input |  |  |
-| End session and token rotation |  |  |
-| Restart recovery |  |  |
+| 电脑端布局和隐私边界 |  |  |
+| 商品搜索和选择 |  |  |
+| 单商品价格和状态持久化 |  |  |
+| 面板和动画 |  |  |
+| iPhone 配对 |  |  |
+| 手机端控制 |  |  |
+| 单手机占用和重连 |  |  |
+| 语音初始化和降级处理 |  |  |
+| 语音搜索 |  |  |
+| 语音价格和无效输入 |  |  |
+| 结束场次和令牌轮换 |  |  |
+| 重启恢复 |  |  |
