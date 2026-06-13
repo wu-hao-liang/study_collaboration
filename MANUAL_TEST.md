@@ -38,10 +38,12 @@ Resolution check:
 ## 2. Desktop Studio Smoke Test
 
 1. Resize Chrome wider and narrower.
-2. Confirm the live frame remains 9:16 and no private panel overlaps it.
-3. Search for `法式`.
-4. Confirm only the two French-door products remain in the private result list.
-5. Select `容声 452L 法式多门冰箱`.
+2. Shorten the Chrome window and confirm the live frame remains at the selected pixel size.
+3. Confirm its top-left stays anchored and the excess height extends below the viewport.
+4. Confirm only the private right panel scrolls and no private panel overlaps the output.
+5. Search for `法式`.
+6. Confirm only the two French-door products remain in the private result list.
+7. Select `容声 452L 法式多门冰箱`.
 
 Expected:
 

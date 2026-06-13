@@ -39,11 +39,10 @@ button:disabled {
 }
 
 .captureColumn {
-  width: calc(var(--output-width) * var(--preview-scale));
-  position: sticky;
-  top: 0;
+  width: var(--output-width);
+  position: relative;
   align-self: start;
-  margin: 0 24px;
+  margin: 0;
 }
 
 .captureHeader,
@@ -63,9 +62,9 @@ button:disabled {
 
 .captureStage {
   position: relative;
-  width: calc(var(--output-width) * var(--preview-scale));
-  height: calc(var(--output-height) * var(--preview-scale));
-  overflow: hidden;
+  width: var(--output-width);
+  height: var(--output-height);
+  overflow: visible;
   background: #f5f7f8;
   box-shadow: 0 10px 30px rgba(24, 36, 43, 0.13);
 }
@@ -74,8 +73,6 @@ button:disabled {
   position: absolute;
   width: var(--output-width);
   height: var(--output-height);
-  transform: scale(var(--preview-scale));
-  transform-origin: top left;
 }
 
 .liveCanvas {
@@ -1242,10 +1239,6 @@ button:disabled {
     grid-template-columns: auto minmax(390px, 1fr);
   }
 
-  .captureColumn {
-    margin: 0 12px;
-  }
-
   .consoleHeader,
   .consoleSection {
     padding-right: 18px;
@@ -1255,22 +1248,14 @@ button:disabled {
 
 @media (max-width: 720px) {
   .studioPage {
-    height: auto;
-    min-height: 100vh;
-    grid-template-columns: 1fr;
-    overflow: visible;
-  }
-
-  .captureColumn {
-    justify-self: center;
+    grid-template-columns: auto minmax(320px, 1fr);
   }
 
   .privateConsole {
-    height: auto;
-    min-height: auto;
-    overflow: visible;
-    border-top: 1px solid #b9c3c8;
-    border-left: 0;
+    height: 100vh;
+    min-height: 0;
+    overflow-y: auto;
+    border-left: 1px solid #b9c3c8;
   }
 
   .deviceStrip {

@@ -73,9 +73,14 @@ describe("LiveCaptureFrame", () => {
     const summary = container.querySelector('[data-panel="summary"]') as HTMLElement;
     const details = container.querySelector('[data-panel="details"]') as HTMLElement;
     const canvas = container.querySelector("[data-live-canvas]");
+    const capture = container.querySelector(".captureColumn");
 
     expect(canvas).toHaveAttribute("data-output-width", "720");
     expect(canvas).toHaveAttribute("data-output-height", "1280");
+    expect(capture).toHaveStyle({
+      "--output-width": "720px",
+      "--output-height": "1280px"
+    });
     expect(within(container).getByText("720 × 1280")).toBeInTheDocument();
     expect(summary).toHaveAttribute("aria-hidden", "false");
     expect(details).toHaveAttribute("aria-hidden", "true");

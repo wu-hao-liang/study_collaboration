@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 import type {
   AnimationEvent,
@@ -10,7 +10,6 @@ import { formatPrice } from "../features/live/formatPrice";
 import type { OutputResolution } from "../features/live/outputResolution";
 
 const DESIGN_WIDTH = 720;
-const PREVIEW_VERTICAL_CHROME = 74;
 
 type LiveCaptureFrameProps = {
   product: ProductSummary | null;
@@ -27,9 +26,6 @@ export function LiveCaptureFrame({
   animation,
   resolution
 }: LiveCaptureFrameProps) {
-  const [previewScale, setPreviewScale] = useState(() =>
-    previewScaleFor(window.innerWidth, window.innerHeight, resolution)
-  );
   const activePanel = state?.active_panel ?? "summary";
   const price =
     product && state ? formatPrice(state.prices[product.id] ?? null) : "价格待定";
@@ -37,19 +33,8 @@ export function LiveCaptureFrame({
     animation?.product_id === null || animation?.product_id === product?.id;
   const animationClass = animationTargetsCurrentProduct ? `animation-${animation?.name}` : "";
 
-  useEffect(() => {
-    const resize = () =>
-      setPreviewScale(
-        previewScaleFor(window.innerWidth, window.innerHeight, resolution)
-      );
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [resolution]);
-
   const designScale = resolution.width / DESIGN_WIDTH;
   const frameStyle = {
-    "--preview-scale": previewScale,
     "--output-width": `${resolution.width}px`,
     "--output-height": `${resolution.height}px`,
     "--design-scale": designScale
@@ -112,18 +97,6 @@ export function LiveCaptureFrame({
       <p className="captureHint">红线内为直播伴侣采集范围</p>
     </section>
   );
-}
-
-function previewScaleFor(
-  viewportWidth: number,
-  viewportHeight: number,
-  resolution: OutputResolution
-): number {
-  const heightScale =
-    (viewportHeight - PREVIEW_VERTICAL_CHROME) / resolution.height;
-  const widthScale =
-    viewportWidth <= 720 ? (viewportWidth - 32) / resolution.width : 1;
-  return Math.min(1, Math.max(0.25, heightScale), widthScale);
 }
 
 function SummaryPanel({
