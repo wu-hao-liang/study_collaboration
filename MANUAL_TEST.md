@@ -28,6 +28,13 @@ Expected:
 - The status reads `实时连接正常`.
 - Product search, device details, errors, QR codes, and tokens appear only on the right.
 
+Resolution check:
+
+1. Change `输出分辨率` through all four presets.
+2. Confirm the live header changes to the selected dimensions.
+3. Refresh Chrome and confirm the last selection is restored.
+4. Configure Douyin Live Companion output to the same resolution before a real stream.
+
 ## 2. Desktop Studio Smoke Test
 
 1. Resize Chrome wider and narrower.

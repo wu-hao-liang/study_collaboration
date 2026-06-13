@@ -8,6 +8,10 @@ import type {
 } from "../../api/types";
 import { LiveCaptureFrame } from "../../components/LiveCaptureFrame";
 import { formatPrice } from "./formatPrice";
+import {
+  DEFAULT_OUTPUT_RESOLUTION,
+  OUTPUT_RESOLUTIONS
+} from "./outputResolution";
 
 
 const product: ProductDetails = {
@@ -63,6 +67,7 @@ describe("LiveCaptureFrame", () => {
         details={product}
         state={state}
         animation={null}
+        resolution={DEFAULT_OUTPUT_RESOLUTION}
       />
     );
     const summary = container.querySelector('[data-panel="summary"]') as HTMLElement;
@@ -84,6 +89,7 @@ describe("LiveCaptureFrame", () => {
         details={product}
         state={{ ...state, active_panel: "details" }}
         animation={null}
+        resolution={DEFAULT_OUTPUT_RESOLUTION}
       />
     );
     const otherProduct = {
@@ -102,6 +108,7 @@ describe("LiveCaptureFrame", () => {
           active_panel: "details"
         }}
         animation={null}
+        resolution={DEFAULT_OUTPUT_RESOLUTION}
       />
     );
 
@@ -119,6 +126,7 @@ describe("LiveCaptureFrame", () => {
         details={product}
         state={{ ...state, active_panel: "details" }}
         animation={animation}
+        resolution={DEFAULT_OUTPUT_RESOLUTION}
       />
     );
 
@@ -135,8 +143,27 @@ describe("LiveCaptureFrame", () => {
         details={product}
         state={{ ...state, active_panel: "details" }}
         animation={{ ...animation, event_id: "event-2" }}
+        resolution={DEFAULT_OUTPUT_RESOLUTION}
       />
     );
     expect(container.querySelector(".livePanels")).not.toBe(firstAnimatedNode);
+  });
+
+  it("applies selectable output dimensions", () => {
+    const fullHd = OUTPUT_RESOLUTIONS[3];
+    const { container } = render(
+      <LiveCaptureFrame
+        product={product}
+        details={product}
+        state={state}
+        animation={null}
+        resolution={fullHd}
+      />
+    );
+
+    const canvas = container.querySelector("[data-live-canvas]");
+    expect(canvas).toHaveAttribute("data-output-width", "1080");
+    expect(canvas).toHaveAttribute("data-output-height", "1920");
+    expect(within(container).getByText("1080 × 1920")).toBeInTheDocument();
   });
 });

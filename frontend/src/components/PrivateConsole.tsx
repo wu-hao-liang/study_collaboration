@@ -9,13 +9,25 @@ import type {
   StudioCommand
 } from "../api/types";
 import { useDesktopSpeech } from "../features/speech/useDesktopSpeech";
+import {
+  OUTPUT_RESOLUTIONS,
+  outputResolutionById,
+  type OutputResolution
+} from "../features/live/outputResolution";
 
 type PrivateConsoleProps = {
   model: StudioController;
   selectedProduct: ProductSummary | null;
+  outputResolution: OutputResolution;
+  onOutputResolutionChange: (resolution: OutputResolution) => void;
 };
 
-export function PrivateConsole({ model, selectedProduct }: PrivateConsoleProps) {
+export function PrivateConsole({
+  model,
+  selectedProduct,
+  outputResolution,
+  onOutputResolutionChange
+}: PrivateConsoleProps) {
   const state = model.state;
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<ProductSummary[]>(model.products);
@@ -176,6 +188,21 @@ export function PrivateConsole({ model, selectedProduct }: PrivateConsoleProps) 
             <dd>{speechLabel(state?.speech.phase)}</dd>
           </div>
         </dl>
+        <label className="resolutionField">
+          <span>输出分辨率</span>
+          <select
+            value={outputResolution.id}
+            onChange={(event) =>
+              onOutputResolutionChange(outputResolutionById(event.target.value))
+            }
+          >
+            {OUTPUT_RESOLUTIONS.map((resolution) => (
+              <option key={resolution.id} value={resolution.id}>
+                {resolution.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </section>
 
       <section className="consoleSection catalogSection" aria-labelledby="catalog-heading">

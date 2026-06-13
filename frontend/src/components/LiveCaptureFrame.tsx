@@ -7,9 +7,9 @@ import type {
   SessionState
 } from "../api/types";
 import { formatPrice } from "../features/live/formatPrice";
+import type { OutputResolution } from "../features/live/outputResolution";
 
-const OUTPUT_WIDTH = 720;
-const OUTPUT_HEIGHT = 1280;
+const DESIGN_WIDTH = 720;
 const PREVIEW_VERTICAL_CHROME = 74;
 
 type LiveCaptureFrameProps = {
@@ -17,16 +17,18 @@ type LiveCaptureFrameProps = {
   details: ProductDetails | null;
   state: SessionState | null;
   animation: AnimationEvent | null;
+  resolution: OutputResolution;
 };
 
 export function LiveCaptureFrame({
   product,
   details,
   state,
-  animation
+  animation,
+  resolution
 }: LiveCaptureFrameProps) {
   const [previewScale, setPreviewScale] = useState(() =>
-    previewScaleFor(window.innerWidth, window.innerHeight)
+    previewScaleFor(window.innerWidth, window.innerHeight, resolution)
   );
   const activePanel = state?.active_panel ?? "summary";
   const price =
@@ -37,20 +39,33 @@ export function LiveCaptureFrame({
 
   useEffect(() => {
     const resize = () =>
-      setPreviewScale(previewScaleFor(window.innerWidth, window.innerHeight));
+      setPreviewScale(
+        previewScaleFor(window.innerWidth, window.innerHeight, resolution)
+      );
+    resize();
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
-  }, []);
+  }, [resolution]);
+
+  const designScale = resolution.width / DESIGN_WIDTH;
+  const frameStyle = {
+    "--preview-scale": previewScale,
+    "--output-width": `${resolution.width}px`,
+    "--output-height": `${resolution.height}px`,
+    "--design-scale": designScale
+  } as CSSProperties;
 
   return (
     <section
       className="captureColumn"
       aria-label="直播采集区域"
-      style={{ "--preview-scale": previewScale } as CSSProperties}
+      style={frameStyle}
     >
       <div className="captureHeader" aria-hidden="true">
         <span>LIVE OUTPUT</span>
-        <span>720 × 1280</span>
+        <span>
+          {resolution.width} × {resolution.height}
+        </span>
       </div>
       <div className="captureStage">
         <div className="captureMat">
@@ -61,34 +76,36 @@ export function LiveCaptureFrame({
           <div
             className="liveCanvas"
             data-live-canvas
-            data-output-width={OUTPUT_WIDTH}
-            data-output-height={OUTPUT_HEIGHT}
+            data-output-width={resolution.width}
+            data-output-height={resolution.height}
           >
-            <div className="liveBrand">冰箱选购咨询</div>
-            {product ? (
-              <div
-                key={animation?.event_id ?? "stable"}
-                className={`livePanels panel-${activePanel} ${animationClass}`}
-              >
-                <SummaryPanel
-                  product={product}
-                  price={price}
-                  active={activePanel === "summary"}
-                />
-                <DetailsPanel
-                  product={product}
-                  details={details}
-                  active={activePanel === "details"}
-                />
-                <div className="animationFlash" aria-hidden="true" />
-              </div>
-            ) : (
-              <div className="liveWaiting">
-                <p>直播即将开始</p>
-                <h1>今天选一台合适的冰箱</h1>
-                <span>等待主持人选择产品</span>
-              </div>
-            )}
+            <div className="liveDesignSurface">
+              <div className="liveBrand">冰箱选购咨询</div>
+              {product ? (
+                <div
+                  key={animation?.event_id ?? "stable"}
+                  className={`livePanels panel-${activePanel} ${animationClass}`}
+                >
+                  <SummaryPanel
+                    product={product}
+                    price={price}
+                    active={activePanel === "summary"}
+                  />
+                  <DetailsPanel
+                    product={product}
+                    details={details}
+                    active={activePanel === "details"}
+                  />
+                  <div className="animationFlash" aria-hidden="true" />
+                </div>
+              ) : (
+                <div className="liveWaiting">
+                  <p>直播即将开始</p>
+                  <h1>今天选一台合适的冰箱</h1>
+                  <span>等待主持人选择产品</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -97,9 +114,15 @@ export function LiveCaptureFrame({
   );
 }
 
-function previewScaleFor(viewportWidth: number, viewportHeight: number): number {
-  const heightScale = (viewportHeight - PREVIEW_VERTICAL_CHROME) / OUTPUT_HEIGHT;
-  const widthScale = viewportWidth <= 720 ? (viewportWidth - 32) / OUTPUT_WIDTH : 1;
+function previewScaleFor(
+  viewportWidth: number,
+  viewportHeight: number,
+  resolution: OutputResolution
+): number {
+  const heightScale =
+    (viewportHeight - PREVIEW_VERTICAL_CHROME) / resolution.height;
+  const widthScale =
+    viewportWidth <= 720 ? (viewportWidth - 32) / resolution.width : 1;
   return Math.min(1, Math.max(0.25, heightScale), widthScale);
 }
 

@@ -39,7 +39,7 @@ button:disabled {
 }
 
 .captureColumn {
-  width: calc(720px * var(--preview-scale));
+  width: calc(var(--output-width) * var(--preview-scale));
   position: sticky;
   top: 0;
   align-self: start;
@@ -63,8 +63,8 @@ button:disabled {
 
 .captureStage {
   position: relative;
-  width: calc(720px * var(--preview-scale));
-  height: calc(1280px * var(--preview-scale));
+  width: calc(var(--output-width) * var(--preview-scale));
+  height: calc(var(--output-height) * var(--preview-scale));
   overflow: hidden;
   background: #f5f7f8;
   box-shadow: 0 10px 30px rgba(24, 36, 43, 0.13);
@@ -72,17 +72,23 @@ button:disabled {
 
 .captureMat {
   position: absolute;
-  width: 720px;
-  height: 1280px;
+  width: var(--output-width);
+  height: var(--output-height);
   transform: scale(var(--preview-scale));
   transform-origin: top left;
 }
 
 .liveCanvas {
   position: relative;
+  width: var(--output-width);
+  height: var(--output-height);
+  overflow: hidden;
+}
+
+.liveDesignSurface {
+  position: relative;
   width: 720px;
   height: 1280px;
-  overflow: hidden;
   display: grid;
   align-content: space-between;
   padding: 9% 8%;
@@ -92,9 +98,11 @@ button:disabled {
     url("/assets/background-placeholder.svg");
   background-position: center;
   background-size: cover;
+  transform: scale(var(--design-scale));
+  transform-origin: top left;
 }
 
-.liveCanvas::after {
+.liveDesignSurface::after {
   content: "";
   position: absolute;
   inset: 4%;
@@ -555,6 +563,26 @@ button:disabled {
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.resolutionField {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, auto);
+  gap: 14px;
+  align-items: center;
+  margin-top: 14px;
+  color: #5e6b72;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.resolutionField select {
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid #bdc8cd;
+  border-radius: 4px;
+  color: #27343a;
+  background: #ffffff;
 }
 
 .searchField {

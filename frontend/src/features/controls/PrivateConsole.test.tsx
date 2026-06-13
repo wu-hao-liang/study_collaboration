@@ -10,6 +10,7 @@ import type {
   StudioController
 } from "../../api/types";
 import { PrivateConsole } from "../../components/PrivateConsole";
+import { DEFAULT_OUTPUT_RESOLUTION } from "../live/outputResolution";
 
 
 vi.mock("qrcode", () => ({
@@ -74,7 +75,14 @@ describe("PrivateConsole controls", () => {
   it("sends price, panel, animation, gesture, and end-session commands", async () => {
     const user = userEvent.setup();
     const sendCommand = vi.fn(async () => ack);
-    render(<PrivateConsole model={buildController(sendCommand)} selectedProduct={product} />);
+    render(
+      <PrivateConsole
+        model={buildController(sendCommand)}
+        selectedProduct={product}
+        outputResolution={DEFAULT_OUTPUT_RESOLUTION}
+        onOutputResolutionChange={vi.fn()}
+      />
+    );
 
     await user.type(screen.getByPlaceholderText("输入人民币金额"), "3999");
     await user.click(screen.getByRole("button", { name: "更新价格" }));
@@ -123,7 +131,14 @@ describe("PrivateConsole controls", () => {
         json: async () => ({ products: [searchResult] })
       })
     );
-    render(<PrivateConsole model={buildController(sendCommand)} selectedProduct={product} />);
+    render(
+      <PrivateConsole
+        model={buildController(sendCommand)}
+        selectedProduct={product}
+        outputResolution={DEFAULT_OUTPUT_RESOLUTION}
+        onOutputResolutionChange={vi.fn()}
+      />
+    );
 
     await user.type(screen.getByPlaceholderText("例如：法式多门、BCD-500"), "法式");
     const result = await screen.findByText("容声 452L 法式多门冰箱");
@@ -155,6 +170,8 @@ describe("PrivateConsole controls", () => {
       <PrivateConsole
         model={buildController(vi.fn(async () => ack))}
         selectedProduct={product}
+        outputResolution={DEFAULT_OUTPUT_RESOLUTION}
+        onOutputResolutionChange={vi.fn()}
       />
     );
 
@@ -165,5 +182,24 @@ describe("PrivateConsole controls", () => {
       "data:image/png;base64,qr"
     );
     expect(screen.getByText("http://192.168.1.10:8000/control/secret")).toBeInTheDocument();
+  });
+
+  it("changes the production output resolution", async () => {
+    const user = userEvent.setup();
+    const onOutputResolutionChange = vi.fn();
+    render(
+      <PrivateConsole
+        model={buildController(vi.fn(async () => ack))}
+        selectedProduct={product}
+        outputResolution={DEFAULT_OUTPUT_RESOLUTION}
+        onOutputResolutionChange={onOutputResolutionChange}
+      />
+    );
+
+    await user.selectOptions(screen.getByLabelText("输出分辨率"), "360p");
+
+    expect(onOutputResolutionChange).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "360p", width: 360, height: 640 })
+    );
   });
 });
