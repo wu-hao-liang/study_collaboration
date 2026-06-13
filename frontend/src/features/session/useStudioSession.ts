@@ -8,6 +8,7 @@ import type {
   StudioController,
   StudioModel
 } from "../../api/types";
+import { createUuid } from "../../api/uuid";
 
 const INITIAL_MODEL: StudioModel = {
   products: [],
@@ -240,7 +241,7 @@ export function useStudioSession(): StudioController {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       return Promise.reject(new Error("实时连接未就绪"));
     }
-    const requestId = crypto.randomUUID();
+    const requestId = createUuid();
     const persistent = !["trigger_animation", "speech_capability"].includes(
       studioCommand.command
     );

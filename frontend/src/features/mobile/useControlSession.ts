@@ -8,6 +8,7 @@ import type {
   ServerEvent,
   StudioModel
 } from "../../api/types";
+import { createUuid } from "../../api/uuid";
 
 const INITIAL_MODEL: StudioModel = {
   products: [],
@@ -29,7 +30,7 @@ function controlClientId(): string {
   if (existing) {
     return existing;
   }
-  const created = crypto.randomUUID();
+  const created = createUuid();
   window.sessionStorage.setItem(key, created);
   return created;
 }
@@ -220,7 +221,7 @@ export function useControlSession(token: string): ControlController {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       return Promise.reject(new Error("实时连接未就绪"));
     }
-    const requestId = crypto.randomUUID();
+    const requestId = createUuid();
     const envelope = {
       type: "command",
       request_id: requestId,
