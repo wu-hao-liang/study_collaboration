@@ -37,6 +37,7 @@ export function useStudioSession(): StudioController {
     const abortController = new AbortController();
     let socket: WebSocket | null = null;
     let reconnectTimer: number | null = null;
+    let disconnectNoticeTimer: number | null = null;
     let reconnectAttempt = 0;
     let stopped = false;
     const seenAnimationIds = new Set<string>();
@@ -58,6 +59,10 @@ export function useStudioSession(): StudioController {
       socket = new WebSocket(websocketUrl(path));
       socketRef.current = socket;
       socket.addEventListener("open", () => {
+        if (disconnectNoticeTimer !== null) {
+          window.clearTimeout(disconnectNoticeTimer);
+          disconnectNoticeTimer = null;
+        }
         reconnectAttempt = 0;
         setModel((current) => ({
           ...current,
@@ -119,9 +124,10 @@ export function useStudioSession(): StudioController {
         }
       });
       socket.addEventListener("close", () => {
-        if (socketRef.current === socket) {
-          socketRef.current = null;
+        if (socketRef.current !== socket) {
+          return;
         }
+        socketRef.current = null;
         for (const pending of pendingRef.current.values()) {
           pending.reject(new Error("connection closed"));
         }
@@ -131,16 +137,24 @@ export function useStudioSession(): StudioController {
         }
         setModel((current) => ({
           ...current,
-          connection: "disconnected",
-          error: "实时连接已断开，正在重连"
+          connection: "connecting"
         }));
+        if (disconnectNoticeTimer === null) {
+          disconnectNoticeTimer = window.setTimeout(() => {
+            disconnectNoticeTimer = null;
+            if (!stopped && socketRef.current === null) {
+              setModel((current) => ({
+                ...current,
+                connection: "disconnected",
+                error: "实时连接暂时不可用，仍在重连"
+              }));
+            }
+          }, 2500);
+        }
         scheduleReconnect();
       });
       socket.addEventListener("error", () => {
-        setModel((current) => ({
-          ...current,
-          error: "无法连接本地实时服务"
-        }));
+        // The close handler owns reconnect status so brief transport errors stay quiet.
       });
     };
 
@@ -180,6 +194,9 @@ export function useStudioSession(): StudioController {
       abortController.abort();
       if (reconnectTimer !== null) {
         window.clearTimeout(reconnectTimer);
+      }
+      if (disconnectNoticeTimer !== null) {
+        window.clearTimeout(disconnectNoticeTimer);
       }
       socket?.close(1000, "page_unload");
     };

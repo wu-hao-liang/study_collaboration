@@ -205,7 +205,8 @@ describe("useStudioSession", () => {
     act(() => {
       first.emit("close", new Event("close"));
     });
-    expect(screen.getByTestId("model")).toHaveTextContent('"connection":"disconnected"');
+    expect(screen.getByTestId("model")).toHaveTextContent('"connection":"connecting"');
+    expect(screen.getByTestId("model")).not.toHaveTextContent("实时连接已断开");
 
     await act(async () => {
       vi.advanceTimersByTime(1000);
@@ -213,5 +214,13 @@ describe("useStudioSession", () => {
       await Promise.resolve();
     });
     expect(FakeWebSocket.instances).toHaveLength(2);
+
+    const second = FakeWebSocket.instances[1];
+    act(() => {
+      second.emit("open", new Event("open"));
+      vi.advanceTimersByTime(2500);
+    });
+    expect(screen.getByTestId("model")).toHaveTextContent('"connection":"connected"');
+    expect(screen.getByTestId("model")).not.toHaveTextContent("实时连接暂时不可用");
   });
 });

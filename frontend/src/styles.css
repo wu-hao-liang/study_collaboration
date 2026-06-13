@@ -31,17 +31,19 @@ button:disabled {
 }
 
 .studioPage {
-  min-height: 100vh;
+  height: 100vh;
   display: grid;
-  grid-template-columns: minmax(310px, 42vh) minmax(480px, 1fr);
-  gap: 28px;
+  grid-template-columns: auto minmax(480px, 1fr);
   align-items: start;
-  padding: 20px 24px 24px;
+  overflow: hidden;
 }
 
 .captureColumn {
-  width: min(42vh, 100%);
-  min-width: 300px;
+  width: calc(720px * var(--preview-scale));
+  position: sticky;
+  top: 0;
+  align-self: start;
+  margin: 0 24px;
 }
 
 .captureHeader,
@@ -52,24 +54,34 @@ button:disabled {
   color: #53616a;
   font-size: 11px;
   font-weight: 700;
-  line-height: 28px;
+  line-height: 26px;
 }
 
 .captureHeader {
   letter-spacing: 0;
 }
 
-.captureMat {
+.captureStage {
   position: relative;
-  padding: 10px;
+  width: calc(720px * var(--preview-scale));
+  height: calc(1280px * var(--preview-scale));
+  overflow: hidden;
   background: #f5f7f8;
   box-shadow: 0 10px 30px rgba(24, 36, 43, 0.13);
 }
 
+.captureMat {
+  position: absolute;
+  width: 720px;
+  height: 1280px;
+  transform: scale(var(--preview-scale));
+  transform-origin: top left;
+}
+
 .liveCanvas {
   position: relative;
-  aspect-ratio: 9 / 16;
-  width: 100%;
+  width: 720px;
+  height: 1280px;
   overflow: hidden;
   display: grid;
   align-content: space-between;
@@ -94,9 +106,9 @@ button:disabled {
   position: relative;
   z-index: 1;
   width: fit-content;
-  padding-bottom: 7px;
-  border-bottom: 3px solid #f5c84c;
-  font-size: 13px;
+  padding-bottom: 14px;
+  border-bottom: 6px solid #f5c84c;
+  font-size: 28px;
   font-weight: 800;
 }
 
@@ -118,15 +130,15 @@ button:disabled {
 .liveWaiting p,
 .liveCategory {
   color: #f5c84c;
-  font-size: 14px;
+  font-size: 30px;
   font-weight: 800;
 }
 
 .liveWaiting h1,
 .livePanel h1 {
-  margin-top: 10px;
-  padding-bottom: 4px;
-  font-size: 34px;
+  margin-top: 20px;
+  padding-bottom: 8px;
+  font-size: 70px;
   line-height: 1.18;
   letter-spacing: 0;
 }
@@ -134,15 +146,15 @@ button:disabled {
 .liveWaiting span,
 .liveModel {
   display: block;
-  margin-top: 12px;
+  margin-top: 24px;
   color: rgba(255, 255, 255, 0.82);
-  font-size: 13px;
+  font-size: 27px;
 }
 
 .livePrice {
-  margin-top: 24px !important;
+  margin-top: 48px !important;
   color: #ffffff;
-  font-size: 30px;
+  font-size: 64px;
   font-weight: 850;
 }
 
@@ -172,7 +184,7 @@ button:disabled {
 
 .detailsPanel {
   align-content: start;
-  gap: 20px;
+  gap: 40px;
   overflow: hidden;
   transform: translateX(100%);
 }
@@ -199,46 +211,46 @@ button:disabled {
 }
 
 .productImageStage img {
-  width: min(78%, 300px);
+  width: min(78%, 600px);
   max-height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 18px 20px rgba(14, 30, 32, 0.32));
 }
 
 .summaryCopy {
-  padding: 18px 18px 20px;
-  border-left: 3px solid #f5c84c;
+  padding: 36px 36px 40px;
+  border-left: 6px solid #f5c84c;
   background: rgba(13, 33, 35, 0.64);
   backdrop-filter: blur(7px);
 }
 
 .summaryCopy h1 {
-  font-size: 28px;
+  font-size: 58px;
 }
 
 .summaryCopy .livePrice {
-  font-size: 28px;
+  font-size: 58px;
 }
 
 .detailsHeader {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 34%;
-  gap: 14px;
+  gap: 28px;
   align-items: center;
   min-width: 0;
-  padding: 18px;
-  border-left: 3px solid #f5c84c;
+  padding: 36px;
+  border-left: 6px solid #f5c84c;
   background: rgba(13, 33, 35, 0.68);
 }
 
 .detailsHeader h1 {
-  font-size: 24px;
+  font-size: 50px;
   line-height: 1.2;
 }
 
 .detailsHeader img {
   width: 100%;
-  max-height: 150px;
+  max-height: 300px;
   object-fit: contain;
 }
 
@@ -255,7 +267,7 @@ button:disabled {
   display: grid;
   grid-template-columns: 42% minmax(0, 1fr);
   min-width: 0;
-  min-height: 38px;
+  min-height: 76px;
   align-items: center;
   background: rgba(12, 32, 34, 0.72);
 }
@@ -264,9 +276,9 @@ button:disabled {
 .specTable dd {
   min-width: 0;
   margin: 0;
-  padding: 8px 11px;
+  padding: 16px 22px;
   overflow: hidden;
-  font-size: 12px;
+  font-size: 25px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -412,7 +424,10 @@ button:disabled {
 }
 
 .privateConsole {
-  min-height: calc(100vh - 44px);
+  height: 100vh;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   border-left: 1px solid #b9c3c8;
   background: #f4f6f7;
 }
@@ -1196,14 +1211,11 @@ button:disabled {
 
 @media (max-width: 920px) {
   .studioPage {
-    grid-template-columns: minmax(270px, 36vh) minmax(390px, 1fr);
-    gap: 18px;
-    padding: 16px;
+    grid-template-columns: auto minmax(390px, 1fr);
   }
 
   .captureColumn {
-    width: min(36vh, 100%);
-    min-width: 270px;
+    margin: 0 12px;
   }
 
   .consoleHeader,
@@ -1215,17 +1227,20 @@ button:disabled {
 
 @media (max-width: 720px) {
   .studioPage {
+    height: auto;
+    min-height: 100vh;
     grid-template-columns: 1fr;
+    overflow: visible;
   }
 
   .captureColumn {
-    width: min(100%, 360px);
-    min-width: 0;
     justify-self: center;
   }
 
   .privateConsole {
+    height: auto;
     min-height: auto;
+    overflow: visible;
     border-top: 1px solid #b9c3c8;
     border-left: 0;
   }

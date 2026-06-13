@@ -1,3 +1,5 @@
+import { useEffect, useState, type CSSProperties } from "react";
+
 import type {
   AnimationEvent,
   ProductDetails,
@@ -5,6 +7,10 @@ import type {
   SessionState
 } from "../api/types";
 import { formatPrice } from "../features/live/formatPrice";
+
+const OUTPUT_WIDTH = 720;
+const OUTPUT_HEIGHT = 1280;
+const PREVIEW_VERTICAL_CHROME = 74;
 
 type LiveCaptureFrameProps = {
   product: ProductSummary | null;
@@ -19,6 +25,9 @@ export function LiveCaptureFrame({
   state,
   animation
 }: LiveCaptureFrameProps) {
+  const [previewScale, setPreviewScale] = useState(() =>
+    previewScaleFor(window.innerWidth, window.innerHeight)
+  );
   const activePanel = state?.active_panel ?? "summary";
   const price =
     product && state ? formatPrice(state.prices[product.id] ?? null) : "价格待定";
@@ -26,44 +35,72 @@ export function LiveCaptureFrame({
     animation?.product_id === null || animation?.product_id === product?.id;
   const animationClass = animationTargetsCurrentProduct ? `animation-${animation?.name}` : "";
 
+  useEffect(() => {
+    const resize = () =>
+      setPreviewScale(previewScaleFor(window.innerWidth, window.innerHeight));
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   return (
-    <section className="captureColumn" aria-label="直播采集区域">
+    <section
+      className="captureColumn"
+      aria-label="直播采集区域"
+      style={{ "--preview-scale": previewScale } as CSSProperties}
+    >
       <div className="captureHeader" aria-hidden="true">
         <span>LIVE OUTPUT</span>
-        <span>1080 × 1920</span>
+        <span>720 × 1280</span>
       </div>
-      <div className="captureMat">
-        <div className="cropMark cropMarkTopLeft" />
-        <div className="cropMark cropMarkTopRight" />
-        <div className="cropMark cropMarkBottomLeft" />
-        <div className="cropMark cropMarkBottomRight" />
-        <div className="liveCanvas" data-live-canvas>
-          <div className="liveBrand">冰箱选购咨询</div>
-          {product ? (
-            <div
-              key={animation?.event_id ?? "stable"}
-              className={`livePanels panel-${activePanel} ${animationClass}`}
-            >
-              <SummaryPanel product={product} price={price} active={activePanel === "summary"} />
-              <DetailsPanel
-                product={product}
-                details={details}
-                active={activePanel === "details"}
-              />
-              <div className="animationFlash" aria-hidden="true" />
-            </div>
-          ) : (
-            <div className="liveWaiting">
-              <p>直播即将开始</p>
-              <h1>今天选一台合适的冰箱</h1>
-              <span>等待主持人选择产品</span>
-            </div>
-          )}
+      <div className="captureStage">
+        <div className="captureMat">
+          <div className="cropMark cropMarkTopLeft" />
+          <div className="cropMark cropMarkTopRight" />
+          <div className="cropMark cropMarkBottomLeft" />
+          <div className="cropMark cropMarkBottomRight" />
+          <div
+            className="liveCanvas"
+            data-live-canvas
+            data-output-width={OUTPUT_WIDTH}
+            data-output-height={OUTPUT_HEIGHT}
+          >
+            <div className="liveBrand">冰箱选购咨询</div>
+            {product ? (
+              <div
+                key={animation?.event_id ?? "stable"}
+                className={`livePanels panel-${activePanel} ${animationClass}`}
+              >
+                <SummaryPanel
+                  product={product}
+                  price={price}
+                  active={activePanel === "summary"}
+                />
+                <DetailsPanel
+                  product={product}
+                  details={details}
+                  active={activePanel === "details"}
+                />
+                <div className="animationFlash" aria-hidden="true" />
+              </div>
+            ) : (
+              <div className="liveWaiting">
+                <p>直播即将开始</p>
+                <h1>今天选一台合适的冰箱</h1>
+                <span>等待主持人选择产品</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <p className="captureHint">红线内为直播伴侣采集范围</p>
     </section>
   );
+}
+
+function previewScaleFor(viewportWidth: number, viewportHeight: number): number {
+  const heightScale = (viewportHeight - PREVIEW_VERTICAL_CHROME) / OUTPUT_HEIGHT;
+  const widthScale = viewportWidth <= 720 ? (viewportWidth - 32) / OUTPUT_WIDTH : 1;
+  return Math.min(1, Math.max(0.25, heightScale), widthScale);
 }
 
 function SummaryPanel({
