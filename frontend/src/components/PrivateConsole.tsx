@@ -165,6 +165,69 @@ export function PrivateConsole({
         </div>
       ) : null}
 
+      <section className="consoleSection" aria-labelledby="display-heading">
+        <div className="sectionHeading">
+          <h3 id="display-heading">展示控制</h3>
+          <span>{state?.active_panel === "details" ? "DETAILS" : "SUMMARY"}</span>
+        </div>
+        <div className="segmentedControl" aria-label="展示面板">
+          <button
+            type="button"
+            aria-pressed={state?.active_panel === "summary"}
+            disabled={busy !== null}
+            onClick={() =>
+              void execute("panel-summary", {
+                command: "set_panel",
+                payload: { panel: "summary" }
+              })
+            }
+          >
+            产品摘要
+          </button>
+          <button
+            type="button"
+            aria-pressed={state?.active_panel === "details"}
+            disabled={busy !== null}
+            onClick={() =>
+              void execute("panel-details", {
+                command: "set_panel",
+                payload: { panel: "details" }
+              })
+            }
+          >
+            参数详情
+          </button>
+        </div>
+        <div className="commandRow">
+          <AnimationButton
+            label="价格高亮"
+            name="price_highlight"
+            disabled={!selectedProduct || busy !== null}
+            execute={execute}
+          />
+          <AnimationButton
+            label="产品聚焦"
+            name="product_spotlight"
+            disabled={!selectedProduct || busy !== null}
+            execute={execute}
+          />
+        </div>
+        <label className="toggleControl">
+          <input
+            type="checkbox"
+            checked={state?.gesture.enabled ?? false}
+            disabled={busy !== null}
+            onChange={(event) =>
+              void execute("gesture", {
+                command: "set_gesture_enabled",
+                payload: { enabled: event.target.checked }
+              })
+            }
+          />
+          <span>启用手势控制</span>
+        </label>
+      </section>
+
       <section className="consoleSection" aria-labelledby="session-heading">
         <div className="sectionHeading">
           <h3 id="session-heading">场次状态</h3>
@@ -263,69 +326,6 @@ export function PrivateConsole({
             更新价格
           </button>
         </form>
-      </section>
-
-      <section className="consoleSection" aria-labelledby="display-heading">
-        <div className="sectionHeading">
-          <h3 id="display-heading">展示控制</h3>
-          <span>{state?.active_panel === "details" ? "DETAILS" : "SUMMARY"}</span>
-        </div>
-        <div className="segmentedControl" aria-label="展示面板">
-          <button
-            type="button"
-            aria-pressed={state?.active_panel === "summary"}
-            disabled={busy !== null}
-            onClick={() =>
-              void execute("panel-summary", {
-                command: "set_panel",
-                payload: { panel: "summary" }
-              })
-            }
-          >
-            产品摘要
-          </button>
-          <button
-            type="button"
-            aria-pressed={state?.active_panel === "details"}
-            disabled={busy !== null}
-            onClick={() =>
-              void execute("panel-details", {
-                command: "set_panel",
-                payload: { panel: "details" }
-              })
-            }
-          >
-            参数详情
-          </button>
-        </div>
-        <div className="commandRow">
-          <AnimationButton
-            label="价格高亮"
-            name="price_highlight"
-            disabled={!selectedProduct || busy !== null}
-            execute={execute}
-          />
-          <AnimationButton
-            label="产品聚焦"
-            name="product_spotlight"
-            disabled={!selectedProduct || busy !== null}
-            execute={execute}
-          />
-        </div>
-        <label className="toggleControl">
-          <input
-            type="checkbox"
-            checked={state?.gesture.enabled ?? false}
-            disabled={busy !== null}
-            onChange={(event) =>
-              void execute("gesture", {
-                command: "set_gesture_enabled",
-                payload: { enabled: event.target.checked }
-              })
-            }
-          />
-          <span>启用手势控制</span>
-        </label>
       </section>
 
       <section className="consoleSection speechSection" aria-labelledby="speech-heading">

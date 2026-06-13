@@ -72,6 +72,28 @@ describe("PrivateConsole controls", () => {
     vi.unstubAllGlobals();
   });
 
+  it("places display controls before session and catalog controls", () => {
+    render(
+      <PrivateConsole
+        model={buildController(vi.fn(async () => ack))}
+        selectedProduct={product}
+        outputResolution={DEFAULT_OUTPUT_RESOLUTION}
+        onOutputResolutionChange={vi.fn()}
+      />
+    );
+
+    const displayHeading = screen.getByRole("heading", { name: "展示控制" });
+    const sessionHeading = screen.getByRole("heading", { name: "场次状态" });
+    const catalogHeading = screen.getByRole("heading", { name: "产品目录" });
+
+    expect(
+      displayHeading.compareDocumentPosition(sessionHeading) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      displayHeading.compareDocumentPosition(catalogHeading) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
   it("sends price, panel, animation, gesture, and end-session commands", async () => {
     const user = userEvent.setup();
     const sendCommand = vi.fn(async () => ack);

@@ -20,6 +20,34 @@ uv run live-background
 4. 保持此 PowerShell 窗口开启。
 5. 在电脑端 Chrome 中打开 `http://127.0.0.1:8000/studio`。
 
+### macOS 克隆和启动注意事项
+
+当前项目以 Windows 11 为主要运行和验收环境。克隆到 macOS 后，应用代码和统一检查脚本支持跨平台运行，但正式直播前仍需在目标 Mac 上完整执行本指南。
+
+1. 安装 Git、`uv` 和 `nvm`。项目要求 Python `3.12.x`，不要使用 Python 3.13 或更高版本。
+2. 不要从 Windows 复制 `.venv`、`frontend/node_modules`、`frontend/dist` 或 `runtime`；应在 Mac 上从干净的 Git 工作区重新生成。
+3. 在终端进入克隆后的项目目录，然后执行：
+
+```bash
+nvm install --lts
+nvm use --lts
+uv python install 3.12
+uv sync
+npm --prefix frontend install
+npm --prefix frontend run build
+export APP_HOST="0.0.0.0"
+export APP_DEV_MODE="false"
+uv run live-background
+```
+
+4. macOS 使用 `npm`，不要使用 Windows 专用的 `npm.cmd`；环境变量使用 `export`，不要使用 PowerShell 的 `$env:` 语法。
+5. 首次使用语音功能时，在“系统设置 > 隐私与安全性 > 麦克风”中允许 Chrome 使用麦克风。
+6. iPhone 需要访问 Mac 上的服务时，允许 macOS 防火墙接收入站连接，并确保 Mac 与 iPhone 位于同一非隔离 Wi-Fi；应用仍须使用 `APP_HOST=0.0.0.0` 启动。
+7. 推荐使用电脑端 Chrome 测试语音功能。Safari 可以继续用于 iPhone 控制页，但不作为电脑端语音验收浏览器。
+8. 部分 Mac 磁盘区分文件名大小写。新增或修改文件时，导入路径的大小写必须与真实文件名完全一致。
+9. 正式直播前，单独确认所用直播采集软件在 macOS 上支持浏览器或窗口采集、所选输出分辨率和无缩放的像素级输出；这部分属于外部直播链路，不由本项目保证。
+10. 运行 `uv run python scripts/check.py`，确认后端与前端的检查、测试和构建全部通过。
+
 预期结果：
 
 - 左侧显示固定的 9:16 直播采集画面。
@@ -66,13 +94,15 @@ uv run live-background
 
 ## 4. 面板和动画
 
-1. 选择 `产品摘要`，然后选择 `参数详情`。
-2. 触发 `价格高亮`。
-3. 触发 `产品聚焦`。
-4. 分别多次触发每种动画。
+1. 确认 `展示控制` 位于右侧控制台最上方的第一个操作区。
+2. 选择 `产品摘要`，然后选择 `参数详情`。
+3. 触发 `价格高亮`。
+4. 触发 `产品聚焦`。
+5. 分别多次触发每种动画。
 
 预期结果：
 
+- `产品摘要` 和 `参数详情` 切换按钮无需向下滚动即可看到。
 - 同一时间只显示一个面板。
 - 详情面板显示正确的图片和规格，且内部没有滚动条。
 - 动画每次都能重新播放，并且不会改变修订版本号。
